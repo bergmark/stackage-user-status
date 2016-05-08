@@ -1,0 +1,11 @@
+resolver: lts-5.15
+packages:
+- '.'
+- location:
+    git: https://github.com/fpco/stackage-curator
+    commit: 7f3b70010b7e82d564d6b8be145bad7b468dd628
+extra-deps:
+- monad-unlift-ref-0.2.0
+- monad-unlift-0.2.0
+flags: {}
+extra-package-dbs: []
