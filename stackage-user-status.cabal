@@ -9,6 +9,7 @@ maintainer:          adam@bergmark.nl
 copyright:           2016 Adam Bergmark
 build-type:          Simple
 cabal-version:       >=1.10
+extra-source-files:  README.md
 
 executable stackage-user-status
   default-language:    Haskell2010
