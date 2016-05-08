@@ -42,23 +42,24 @@ run (toStrictText -> user) = do
   putStrLn "Parsing build-constraints.yaml"
   bc <- defaultBuildConstraints manager
   putStrLn "Parsed build-constraints.yaml"
-  let pns = filter (maybe False ((user `isInfixOf`) . unMaintainer) . pcMaintainer . bcPackageConstraints bc) . S.toList $ bcPackages bc
-  forM_ (groupUsers . zip pns $ map (bcPackageConstraints bc) pns) $ \(m, xs) -> do
+  let pkgsForUsers = filter (maybe False ((user `isInfixOf`) . unMaintainer) . pcMaintainer . bcPackageConstraints bc) . S.toList $ bcPackages bc
+  forM_ (groupUsers . zip pkgsForUsers $ map (bcPackageConstraints bc) pkgsForUsers) $ \(m, xs) -> do
     putStrLn ""
     putStrLn $ "# Packages for " <> unMaintainer m
-    printPackageInfos "Bounds"       xs (not . isAnyVersion . pcVersionRange . snd) (showF . render . disp . pcVersionRange)
-    printPackageInfos "Tests"        xs ((/= ExpectSuccess) . pcTests    . snd) (showF . show . pcTests)
-    printPackageInfos "Benchmarks"   xs ((/= ExpectSuccess) . pcBenches  . snd) (showF . show . pcBenches)
-    printPackageInfos "Haddocks"     xs ((/= ExpectSuccess) . pcHaddocks . snd) (showF . show . pcHaddocks)
-    printPackageInfos "All packages" xs (const True) (const Nothing)
+    printPackageInfos "Bounds"         xs (not . isAnyVersion . pcVersionRange) (showF . render . disp . pcVersionRange)
+    printPackageInfos "Tests"          xs ((/= ExpectSuccess) . pcTests) (showF . show . pcTests)
+    printPackageInfos "Benchmarks"     xs ((/= ExpectSuccess) . pcBenches) (showF . show . pcBenches)
+    printPackageInfos "Haddocks"       xs ((/= ExpectSuccess) . pcHaddocks) (showF . show . pcHaddocks)
+    printPackageInfos "Skipped builds" xs pcSkipBuild (const Nothing)
+    printPackageInfos "All packages"   xs (const True) (const Nothing)
 
 printPackageInfos :: Text
                   -> [(PackageName, PackageConstraints)]
-                  -> ((PackageName, PackageConstraints) -> Bool)
+                  -> (PackageConstraints -> Bool)
                   -> (PackageConstraints -> Maybe Text)
                   -> IO ()
 printPackageInfos title xs p m = do
-  let with = filter p xs
+  let with = filter (p . snd) xs
   unless (null with) $ do
     putStrLn $ "## " <> title
     forM_ with $ \(pn, pcs) -> do
