@@ -37,9 +37,7 @@ main = do
 run :: ConvertibleStrings s StrictText => s -> IO ()
 run (toStrictText -> user) = do
   manager <- newManager tlsManagerSettings
-  putStrLn "Parsing build-constraints.yaml"
   bc <- defaultBuildConstraints manager
-  putStrLn "Parsed build-constraints.yaml"
   let pkgsForUsers = filter (maybe False ((user `isInfixOf`) . unMaintainer) . pcMaintainer . bcPackageConstraints bc) . S.toList $ bcPackages bc
   forM_ (groupUsers . zip pkgsForUsers $ map (bcPackageConstraints bc) pkgsForUsers) $ \(m, xs) -> do
     putStrLn ""
