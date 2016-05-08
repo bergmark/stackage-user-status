@@ -7,8 +7,6 @@
 
 ```shell
 $ stackage-user-status Michael
-Parsing build-constraints.yaml
-Parsed build-constraints.yaml
 
 # Packages for Michael Xavier
 ## Tests
