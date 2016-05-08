@@ -1,0 +1,34 @@
+name:                stackage-user-status
+version:             0.1.0.0
+synopsis:            Find info about your stackaged packages that is stored in build-constraints.yaml
+description:         Find info about your stackaged packages that is stored in build-constraints.yaml
+license:             BSD3
+license-file:        LICENSE
+author:              Adam Bergmark
+maintainer:          adam@bergmark.nl
+copyright:           2016 Adam Bergmark
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable stackage-user-status
+  default-language:    Haskell2010
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  build-depends:
+      base >= 4.8 && < 4.9
+    , Cabal
+    , aeson
+    , bytestring
+    , classy-prelude
+    , containers
+    , http-client
+    , http-client-tls
+    , lens
+    , lens-aeson
+    , pretty
+    , stackage-curator
+    , string-conversions
+    , text
+    , unordered-containers
+    , witherable
+    , yaml
