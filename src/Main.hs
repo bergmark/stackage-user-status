@@ -14,20 +14,18 @@ import ClassyPrelude
 import Data.String.Conversions hiding ((<>))
 import Data.String.Conversions.Monomorphic
 import Distribution.Package (PackageName)
+import Distribution.PackageDescription
 import Distribution.Text (disp)
 import Distribution.Version
 import Network.HTTP.Client
 import Network.HTTP.Client.TLS (tlsManagerSettings)
 import Stackage.BuildConstraints
+import Stackage.ShowBuildPlan
 import Stackage.Types
 import Text.PrettyPrint (render)
 import qualified Data.HashMap.Strict as H
+import qualified Data.Map.Strict     as M
 import qualified Data.Set            as S
-
-data Packages = Package
-  { stackageMaintainer :: !Text
-  , packages           :: !(Set Text)
-  } deriving (Eq, Show)
 
 main :: IO ()
 main = do
@@ -51,12 +49,12 @@ run (toStrictText -> user) = do
     printPackageInfos "Benchmarks"     xs ((/= ExpectSuccess) . pcBenches) (showF . show . pcBenches)
     printPackageInfos "Haddocks"       xs ((/= ExpectSuccess) . pcHaddocks) (showF . show . pcHaddocks)
     printPackageInfos "Skipped builds" xs pcSkipBuild (const Nothing)
-    printPackageInfos "All packages"   xs (const True) (const Nothing)
+    printPackageInfos "All packages"   xs (const True) (Just . concatMap showFlag . M.toList . pcFlagOverrides)
 
-printPackageInfos :: Text
+printPackageInfos :: StrictText
                   -> [(PackageName, PackageConstraints)]
                   -> (PackageConstraints -> Bool)
-                  -> (PackageConstraints -> Maybe Text)
+                  -> (PackageConstraints -> Maybe StrictText)
                   -> IO ()
 printPackageInfos title xs p m = do
   let with = filter (p . snd) xs
@@ -70,6 +68,10 @@ groupUsers = map (second $ sortBy (comparing fst)) . H.toList . foldl' (\h (pn, 
 
 instance ConvertibleStrings PackageName  Text where convertString = unPackageName
 instance ConvertibleStrings VersionRange Text where convertString = cs . render . disp
+instance ConvertibleStrings FlagName     Text where convertString = unFlagName
+
+showFlag :: (FlagName, Bool) -> StrictText
+showFlag (fn, b) = " " <> (if b then "+" else "-") <> cs fn
 
 showF :: String -> Maybe StrictText
 showF = Just . (": " <>) . cs
