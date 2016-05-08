@@ -1,7 +1,7 @@
 name:                stackage-user-status
 version:             0.1.0.0
-synopsis:            Find info about your stackaged packages that is stored in build-constraints.yaml
-description:         Find info about your stackaged packages that is stored in build-constraints.yaml
+synopsis:            Figure out which packages you should update based on build-constraints.yaml
+description:         Figure out which packages you should update based on build-constraints.yaml
 license:             BSD3
 license-file:        LICENSE
 author:              Adam Bergmark
@@ -18,18 +18,11 @@ executable stackage-user-status
   build-depends:
       base >= 4.8 && < 4.9
     , Cabal
-    , aeson
-    , bytestring
     , classy-prelude
     , containers
     , http-client
     , http-client-tls
-    , lens
-    , lens-aeson
     , pretty
     , stackage-curator
     , string-conversions
-    , text
     , unordered-containers
-    , witherable
-    , yaml
