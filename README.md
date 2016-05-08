@@ -1,4 +1,7 @@
-***Disclaimer***: Does not take upper bounds on a packages's dependencies into account, check the [open stackage issues](https://github.com/fpco/stackage/issues) for that.
+**Disclaimers**:
+
+* Does not take upper bounds on a packages's dependencies into account, check the [open stackage issues](https://github.com/fpco/stackage/issues) for that.
+* Does not follow the github-users map, only shows packages directly under the searched name.
 
 # Example
 
