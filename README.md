@@ -1,3 +1,5 @@
+***Disclaimer***: Does not take upper bounds on a packages's dependencies into account, check the [open stackage issues](https://github.com/fpco/stackage/issues) for that.
+
 # Example
 
 ```shell
